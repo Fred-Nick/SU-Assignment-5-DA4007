@@ -2,18 +2,20 @@
 
 #include "LanguageModel.h"
 
+#include<cmath>
 #include <stdexcept>
 
 // constructor
-LanguageModel::LanguageModel(int k, double alpha): k_(k), alpha(alpha){
+LanguageModel::LanguageModel(int k, double alpha): k_(k), alpha_(alpha){
 
     if (k_ <= 0){
         throw std::invalid_argument("k must be a positive integer");
+    
     }
 
-    if (alpha_ <0.0){
+    if (!std::isfinite(alpha_) || alpha_ <0.0){
 
-        throw std::invalid_argument("alpha must be non-negative")
+        throw std::invalid_argument("alpha must be non-negative");
 
     }
 }
@@ -26,7 +28,7 @@ void LanguageModel::train(const std::string& text){
     }
 
     gramCounts_.clear();
-    Transitions_.clear();
+    transitions_.clear();
     alphabet_.clear();
 
     for ( char c : text) {
@@ -43,7 +45,7 @@ void LanguageModel::train(const std::string& text){
 
         if (i + k_ < text.size()){
             char next = text[i + k_];
-            ++Transitions_[gram][next];
+            ++transitions_[gram][next];
 
         }
 
@@ -57,7 +59,7 @@ const std::map<std::string, int>& LanguageModel::getGramsCounts() const {
 }
 
 const std::map<std::string, std::map<char, int>>& LanguageModel::getTransitions() const{
-    return Transitions_;
+    return transitions_;
 }
 
 int LanguageModel:: getK() const {

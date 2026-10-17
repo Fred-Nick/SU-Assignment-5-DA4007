@@ -9,7 +9,6 @@
 // include the standard libraries
 #include <map> // key value pairs
 #include <string> // Store strings as sequences of charcters
-#include <vector>
 
 
 class LanguageModel{
@@ -19,8 +18,9 @@ class LanguageModel{
     int k_;
     double alpha_;
     std::string alphabet_;
+
     std::map<std::string, int> gramCounts_;
-    std::map<std::string, std::map<char, int>> Transitions_;
+    std::map<std::string, std::map<char, int>> transitions_;
 
     public:
     
@@ -48,9 +48,6 @@ class LanguageModel{
     double getAlpha() const;
 
     const std::string& getAlphabet() const;
-
-
-
 
 };
 
