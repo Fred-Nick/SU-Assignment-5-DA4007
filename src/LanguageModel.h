@@ -22,6 +22,8 @@ class LanguageModel{
     std::map<std::string, int> gramCounts_;
     std::map<std::string, std::map<char, int>> transitions_;
 
+    std::map<std::string, int> followedCounts_;
+
     public:
     
     // CONSTRUCTORS:
@@ -48,6 +50,12 @@ class LanguageModel{
     double getAlpha() const;
 
     const std::string& getAlphabet() const;
+
+    double getTransitionProbability(
+        const std::string& gram,
+        char nextChar
+
+    ) const;
 
 };
 
