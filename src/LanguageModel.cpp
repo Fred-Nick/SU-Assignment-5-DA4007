@@ -27,7 +27,9 @@ void LanguageModel::train(const std::string& text){
         
     }
 
+    
     gramCounts_.clear();
+    followedCounts_.clear();
     transitions_.clear();
     alphabet_.clear();
 
@@ -43,8 +45,9 @@ void LanguageModel::train(const std::string& text){
         std::string gram = text.substr(i,k_);
         ++gramCounts_[gram];
 
-        if (i + k_ < text.size()){
+        if (i + static_cast<std::size_t>(k_)< text.size()){
             char next = text[i + k_];
+            ++followedCounts_[gram];
             ++transitions_[gram][next];
 
         }
@@ -79,7 +82,49 @@ const std::string& LanguageModel::getAlphabet() const{
 
 }
 
+double LanguageModel::getTransitionProbability(
+    
+    const std::string& gram,
+    char nextChar
+) const  {
 
+    // The charcter must be in the alphabet
+    if (alphabet_.find(nextChar) == std::string::npos){
+        return 0.0;
+    }
+
+    // count how often nextChar follows gram
+    int count = 0;
+
+    auto gramIT = transitions_.find(gram);
+
+    if (gramIT != transitions_.end()) {
+        auto charIT = gramIT->second.find(nextChar);
+
+        if (charIT != gramIT->second.end()){
+            count = charIT->second;
+        }
+    }
+
+    // count occurrences of gram that have a following charcter
+    int total = 0;
+
+    auto totalIT = followedCounts_.find(gram);
+        
+        if(totalIT != followedCounts_.end()){
+            total = totalIT->second;
+        }
+    
+     // apply pseudocount smoothing (laplace smoothing)
+     double numerator = count + alpha_;
+     double denominator = total+alpha_ * alphabet_.size();
+        
+        if (denominator == 0.0){
+            return 0.0;
+        }
+
+        return numerator/denominator;
+}
 
 
 
