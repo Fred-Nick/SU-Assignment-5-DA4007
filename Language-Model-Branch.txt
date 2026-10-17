@@ -4,5 +4,6 @@ Language k-grams test.cpp only tests that k-grams work
 
 Language k-grams laplace test2.cpp checks that the k-grams function works with smoothing.
 
-
-
+test2.cpp.cpp trains a second-order character language model on "ababac" 
+and checks whether the probabilities it calculates agree with the 
+character-transition counts in that text.
